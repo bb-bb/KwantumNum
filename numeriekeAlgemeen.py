@@ -21,22 +21,29 @@ def getHamiltonMatrix(gridSize, t):
 	       + np.diag(-t * np.ones(gridSize - 1), k = 1)
 
 def calculateAndPlot(hamiltonMatrix, gridSize, spacing):
-	fig, (ax1, ax2) = plt.subplots(2, 1)
+	fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
 
 	# Calculate the eigenvalues
 	eigenValues, eigenVectors = np.linalg.eigh(hamiltonMatrix)
 
-	ax1.plot(eigenValues)
+	ax1.plot(eigenValues, "o", markersize = 3)
 	ax1.set_title("Energy")
 	ax1.set_ylabel("E (A.U.)")
 	ax1.set_xlabel("n")
 
 	n0 = 0
 
-	l, = ax2.plot(np.linspace(0, spacing, num = gridSize), eigenVectors[:, n0] ** 2)
+	eigenVector = eigenVectors[:, n0]
+	l, = ax2.plot(np.linspace(0, spacing, num = gridSize), eigenVector ** 2)
 	ax2.set_ylabel(r"$|\psi|^2$")
 	ax2.set_xlabel("x (A.U)")
 	ax2.set_title("Probability density")
+
+	l2, = ax3.plot(np.linspace(0, spacing, num = gridSize), eigenVector)
+	ax3.set_ylim([np.min(hamiltonMatrix), np.max(hamiltonMatrix)])
+	ax3.set_ylabel(r"$\psi$")
+	ax3.set_xlabel("x (A.U)")
+	ax3.set_title("Wave function")
 
 	plt.tight_layout()
 
@@ -44,8 +51,9 @@ def calculateAndPlot(hamiltonMatrix, gridSize, spacing):
 	slider = Slider(sliderAx, "n", 0, gridSize - 1, valinit = n0, valfmt = "%d")
 	def update(val):
 	    n = int(slider.val)
-	    y = eigenVectors[:, n] ** 2
-	    l.set_ydata(y)
+	    y = eigenVectors[:, n]
+	    l.set_ydata(y ** 2)
+	    l2.set_ydata(y)
 	    ax2.set_title("Probability distribution for eigenvalue = {:4.3f}".format(eigenValues[n]))
 	    fig.canvas.draw_idle()
 	slider.on_changed(update)
@@ -63,6 +71,7 @@ def calculateAndPlot(hamiltonMatrix, gridSize, spacing):
 	def close(event):
 		plt.close()
 	closeButton.on_clicked(close)
+	plt.show()
 
 calculateAndPlot(getHamiltonMatrix(100, 1), 100, 1)
 
@@ -91,7 +100,5 @@ def task5(n1,a1,n2,a2,gridSize):
 
 
 task3()
-task5(2,50**-1,0,0,101)
-
-plt.show()
+task5(2, 50**-1, 0, 0, 101)
 
