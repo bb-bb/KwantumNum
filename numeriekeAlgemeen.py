@@ -2,7 +2,7 @@
 Author Frank Otto
 Editted by Bouke Jansen
 
-In this document the schrodinger equation is solved on a discrete space, and the eigenvalues for the energie are calculated.
+In this document the schrodinger equation is solved on a discrete space, and the eigenValues for the energie are calculated.
 """
 
 import numpy as np
@@ -17,14 +17,20 @@ def getHamiltonMatrix(gridSize, t):
 		   + np.diag(2 * t * np.ones(gridSize)) \
 		   + np.diag(-t * np.ones(gridSize - 1), k = 1)
 
-def calculateAndPlot(hamiltonMatrix, gridSize, spacing):
-	fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
+def calculateEigens(hamiltonMatrix, gridSize, spacing):
+	global eigenValues, eigenVectors
 
 	# Calculate the eigenvalues
 	eigenValues, eigenVectors = np.linalg.eigh(hamiltonMatrix)
 
 	for i in range(gridSize):
-		eigenVectors[:, i] /= np.sqrt(np.sum(eigenVectors[:, i]**2 / gridSize))
+		eigenVectors[:, i] /= np.sqrt(spacing * np.sum(eigenVectors[:, i]**2 / gridSize))
+
+	return eigenValues, eigenVectors
+
+def plotEigens(eigenValues, eigenVectors, spacing):
+	gridSize = len(eigenValues)
+	fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
 
 	ax1.plot(eigenValues, "o", markersize = 3)
 	ax1.set_title("Energy")
@@ -35,12 +41,13 @@ def calculateAndPlot(hamiltonMatrix, gridSize, spacing):
 
 	eigenVector = eigenVectors[:, n0]
 	l, = ax2.plot(np.linspace(0, spacing, num = gridSize), eigenVector ** 2)
+	ax3.set_ylim([0, 1.1 * np.max(eigenVectors)**2])
 	ax2.set_ylabel(r"$|\psi|^2$")
 	ax2.set_xlabel("x (A.U)")
 	ax2.set_title("Probability density")
 
 	l2, = ax3.plot(np.linspace(0, spacing, num = gridSize), eigenVector)
-	ax3.set_ylim([np.min(eigenVectors), np.max(eigenVectors)])
+	ax3.set_ylim([1.1 * np.min(eigenVectors), 1.1 * np.max(eigenVectors)])
 	ax3.set_ylabel(r"$\psi$")
 	ax3.set_xlabel("x (A.U)")
 	ax3.set_title("Wave function")
@@ -72,9 +79,6 @@ def calculateAndPlot(hamiltonMatrix, gridSize, spacing):
 		plt.close()
 	closeButton.on_clicked(close)
 
-
-#calculateAndPlot(getHamiltonMatrix(100, 1), 100, 1)
-
 def task3():
 	gridSize = 400
 	wellDepth = 1
@@ -86,11 +90,13 @@ def task3():
 	hamiltonMatrix = getHamiltonMatrix(gridSize, t)
 	for i in range(wellWidth):
 		hamiltonMatrix[wellPosition + i][wellPosition + i] -= wellDepth
-	calculateAndPlot(hamiltonMatrix, gridSize, spacing)
+
+	values, vectors = calculateEigens(hamiltonMatrix, gridSize, spacing)
+	plotEigens(values, vectors, spacing)
 	plt.show()
 
 def task5():
-	for i in range(10):
+	for i in range(1):
 		task5help(2, 50**-1, 4, i, 101)
 	plt.show()
 
@@ -103,6 +109,12 @@ def task5help(n1, a1, n2, a2, gridSize):
 				matrix[i][j] = matrix[i][j] * a * np.abs(0.5 * gridSize - j - 0.5)**n
 		return matrix
 	potentiaalMatrix = potentiaal(n1, a1, gridSize) + potentiaal(n1, a2, gridSize) + getHamiltonMatrix(gridSize, 1)
-	calculateAndPlot(potentiaalMatrix, gridSize, 1)
-#task3()
+	values, vectors = calculateEigens(potentiaalMatrix, gridSize, 1)
+	plotEigens(values, vectors, 1)
+
+values, vectors = calculateEigens(getHamiltonMatrix(100, 1), 100, 1)
+plotEigens(values, vectors, 1)
+plt.show()
+
+task3()
 task5()
