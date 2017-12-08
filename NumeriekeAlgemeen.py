@@ -28,13 +28,14 @@ def calculateEigens(hamiltonMatrix, gridSize, spacing):
 
 	return eigenValues, eigenVectors
 
-def plotEigens(eigenValues, eigenVectors, spacing):
+def plotEigens(eigenValues, eigenVectors, spacing, fileName):
 	gridSize = len(eigenValues)
-	fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
 
+	fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
+	fig.canvas.set_window_title(fileName) 
 	ax1.plot(eigenValues, "o", markersize = 3)
 	ax1.set_title("Energy")
-	ax1.set_ylabel("E (A.U.)")
+	ax1.set_ylabel("E (a.u.)")
 	ax1.set_xlabel("n")
 
 	n0 = 0
@@ -79,6 +80,17 @@ def plotEigens(eigenValues, eigenVectors, spacing):
 		plt.close()
 	closeButton.on_clicked(close)
 
+def potMaker(n1, a1, n2, a2, gridSize):
+	def potentiaal(n, a, gridSize):
+		matrix = np.diag(np.ones(gridSize)) 
+		for i in range(gridSize):
+			for j in range(gridSize):
+				matrix[i][j] = matrix[i][j] * a * np.abs(0.5 * gridSize - j - 0.5)**n
+		return matrix
+	potentiaalMatrix = potentiaal(n1, a1, gridSize) + potentiaal(n2, a2, gridSize) + getHamiltonMatrix(gridSize, 1)
+	values, vectors = calculateEigens(potentiaalMatrix, gridSize, 1)
+	return (values,vectors,1)
+
 def task3():
 	gridSize = 400
 	wellDepth = 1
@@ -92,29 +104,34 @@ def task3():
 		hamiltonMatrix[wellPosition + i][wellPosition + i] -= wellDepth
 
 	values, vectors = calculateEigens(hamiltonMatrix, gridSize, spacing)
-	plotEigens(values, vectors, spacing)
+	plotEigens(values, vectors, spacing, 'Task 3.0')
 	plt.show()
 
 def task5():
-	for i in range(1):
-		task5help(2, 50**-1, 4, i, 101)
+	plotEigens(potMaker(2, 10**-4, 0, 0, 101)[0],potMaker(2, 10**-4, 0,0, 101)[1],1,'Task 5.0')
+	for i in np.arange(0,10**-5,10**-6):
+		hulpje = potMaker(2, 10**-4, 4, i, 101)
+		#plotEigens(hulpje[0],hulpje[1],hulpje[2])
+		if i == 0:
+			aMatrix =  hulpje[0]
+		if i != 0:
+			aiMatrix = hulpje[0] - aMatrix
+			plt.figure('Task 5.2')
+			plt.plot(aiMatrix,'o', label = "a = " + str(i), markersize = 2.5)
+			plt.legend()
+			plt.xlabel('n')
+			plt.ylabel('$\Delta$E (A.U)')
+			plt.title('Energieverschillen van V(x) = ax\u2074 + x\u00B2 en V(x) = x\u00B2')
+		plt.figure('Task 5.1')
+		plt.plot(hulpje[0],'o', label = "a = " + str(i), markersize = 2.5)
+		plt.legend()
+		plt.xlabel('n')
+		plt.ylabel('E (A.U)')
+		plt.title('Energie met V(x) = ax\u2074 + x\u00B2')
 	plt.show()
 
-
-def task5help(n1, a1, n2, a2, gridSize):
-	def potentiaal(n, a, gridSize):
-		matrix = np.diag(np.ones(gridSize)) 
-		for i in range(gridSize):
-			for j in range(gridSize):
-				matrix[i][j] = matrix[i][j] * a * np.abs(0.5 * gridSize - j - 0.5)**n
-		return matrix
-	potentiaalMatrix = potentiaal(n1, a1, gridSize) + potentiaal(n1, a2, gridSize) + getHamiltonMatrix(gridSize, 1)
-	values, vectors = calculateEigens(potentiaalMatrix, gridSize, 1)
-	plotEigens(values, vectors, 1)
-
 values, vectors = calculateEigens(getHamiltonMatrix(100, 1), 100, 1)
-plotEigens(values, vectors, 1)
+plotEigens(values, vectors, 1, 'Task 0.0')
 plt.show()
-
 task3()
 task5()
