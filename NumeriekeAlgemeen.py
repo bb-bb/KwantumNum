@@ -1,6 +1,6 @@
 """
 Author Frank Otto
-Editted by Bouke Jansen
+Editted by Bouke Jansen, Ravi de Berg
 
 In this document the schrodinger equation is solved on a discrete space, and the eigenValues for the energie are calculated.
 """
@@ -18,8 +18,6 @@ def getHamiltonMatrix(gridSize, t):
 		   + np.diag(-t * np.ones(gridSize - 1), k = 1)
 
 def calculateEigens(hamiltonMatrix, gridSize, spacing):
-	global eigenValues, eigenVectors
-
 	# Calculate the eigenvalues
 	eigenValues, eigenVectors = np.linalg.eigh(hamiltonMatrix)
 
