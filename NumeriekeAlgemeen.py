@@ -14,5 +14,3 @@ values, vectors = calculateEigenstate(getHamiltonMatrix(100, 1), 1)
 plotEigenstate(values, vectors, 1, 'Task 0.0')
 plt.show()
 
-task3()
-task5()
