@@ -1,5 +1,5 @@
 """
-Author Frank Otto, Bauke Jansen, Ravi van de Berg
+Author Frank Otto, Bouke Jansen, Ravi de Berg
 General functions that are relevant for all tasks will be created in this file.
 """
 

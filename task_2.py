@@ -3,7 +3,7 @@ Author Frank Otto
 Task 2 the delta potential.
 """
 
-from quantummodule import plotEigenstate,getHamiltonMatrix,calculateEigenstate
+from quantummodule import *
 import matplotlib.pyplot as plt
 import numpy as np
 
