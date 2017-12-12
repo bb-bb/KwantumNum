@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 
 def potMaker(n1, a1, n2, a2, gridSize):
     """
-    gooi dit ff lekker in je eigen task
-
     :param n1:
     :param a1:
     :param n2:
