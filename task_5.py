@@ -5,11 +5,8 @@ import matplotlib.pyplot as plt
 
 def potMaker(n1, a1, n2, a2, gridSize):
     """
-    :param n1:
-    :param a1:
-    :param n2:
-    :param a2:
-    :param gridSize:
+	A function that creates a potential V(x) = a1 x^n1 + a2 x^n2 which can be added to the Hamilton matrix.
+    :param gridSize: Length of the box.
     :return:
     """
 
@@ -26,26 +23,36 @@ def potMaker(n1, a1, n2, a2, gridSize):
 
 
 def task5():
-    plotEigenstate(potMaker(2, 10 ** -4, 0, 0, 101)[0], potMaker(2, 10 ** -4, 0, 0, 101)[1], 1, 'Task 5.0')
-    for i in np.arange(0, 10 ** -5, 10 ** -6):
-        HVMatrix = potMaker(2, 10 ** -4, 4, i, 101)  
-        # plotEigenstate(HVMatrix[0], HVMatrix[1], HVMatrix[2])
-
-        if i == 0:  # Aangezien deze statement altijd True geeft bij de eerste stap in je for kan je wat erin staat
-            # misschien beter voor je for loop uitvoeren
+    """
+	 This plots the eigenfunctions and values for the harmonic oscillator. It also plots the energy levels of the 
+    anharmonic oscillator with potential x^2 + x^4 and the difference in energy levels between the harmonic 
+    oscillator and the anharmonic oscillator.
+    """
+    plotEigenstate(potMaker(2, 1/4, 0, 0, 101)[0], potMaker(2, 1/4, 0, 0, 101)[1], 1, 'Task 5.0')
+    for i in np.arange(0, 1, 0.1):
+        HVMatrix = potMaker(2, 1/4, 4, i, 101)  
+        if i == 0: 
             energieMatrix = HVMatrix[0]
+            """
+            This is the matrix with only x^2 potential.
+            """
         if i != 0:
-            verschilMatrix = HVMatrix[0] - energieMatrix
+            verschilMatrix = HVMatrix[0] - energieMatrix 
+            """
+            This is the difference between a1 x^2 and a1 x^2 + i x^4.
+            """
             plt.figure('Task 5.2')
             plt.plot(verschilMatrix, 'o', label="a = " + str(i), markersize=2.5)
             plt.legend()
             plt.xlabel('n')
             plt.ylabel('$\Delta$E (A.U)')
-            plt.title('Energieverschillen van deltapotential(x) = ax\u2074 + x\u00B2 en deltapotential(x) = x\u00B2')
+            plt.title('Energieverschillen van V(x) = ax\u2074 + 1/4 x\u00B2 en V(x) = 1/4 x\u00B2')
         plt.figure('Task 5.1')
         plt.plot(HVMatrix[0], 'o', label="a = " + str(i), markersize=2.5)
         plt.legend()
         plt.xlabel('n')
         plt.ylabel('E (A.U)')
-        plt.title('Energie met deltapotential(x) = ax\u2074 + x\u00B2')
+        plt.title('Energie met potentiaal V(x) = ax\u2074 + x\u00B2')
     plt.show()
+	
+task5()
