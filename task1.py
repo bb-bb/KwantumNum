@@ -20,7 +20,7 @@ def disorder(size,scale):
     :return: A square array of size size, which contains random entries on the main diagonal
     """
     deltaHhatDiagonaal=[]
-    deltaHhatDiagonaal.append([random.random()*scale for i in range(size)]) 
+    deltaHhatDiagonaal.append([random.random() for i in range(size)])*scale 
     deltaHhat=np.diagflat(deltaHhatDiagonaal) #aanmaken extra matrix
     return(deltaHhat)
     
