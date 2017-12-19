@@ -8,8 +8,8 @@ periodicBoundaries = True
 t = 1
 boxSize = 1
 def performTask3(pictureNumber, **data):
-	if data["gridSize"] < 3:
-		print("The gridSize is too small: " + str(data["gridSize"]) + " in picture " + str(pictureNumber) + " results might be corrupted.")
+	if data["gridSize"] < 3 and periodicBoundaries:
+		print("The gridSize is too small for periodic boundaries: " + str(data["gridSize"]) + " in picture " + str(pictureNumber) + " results might be corrupted.")
 	if data["wellWidth"] > data["gridSize"]:
 		print("The wellWidth is bigger than the gridSize:" + str(data["wellWidth"]) + ">" + str(data["gridSize"]) + " in picture " + str(pictureNumber) + " addapting the wellWidth...")
 		data["wellWidth"] = data["gridSize"]
