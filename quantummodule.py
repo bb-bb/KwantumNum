@@ -40,7 +40,7 @@ def calculateEigenstate(hamiltonMatrix, boxSize):
 	return eigenValues, eigenVectors
 
 
-def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle):
+def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle, waveFunc = False):
 	"""
 	A function plotting the eigenValues, an eigenStates and eigenState squared,
 	with some slider to scroll through the eigenStates and eigenState squared.
@@ -48,6 +48,8 @@ def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle):
 	:param eigenValues: Sorted set of eigenvalues
 	:eigenVectors: eigenvectors in the order to their corresponding eigenvalues
 	:param boxSize: Length of the box
+	:waveFunc: optional argument, a function to plot through the eigenstates. It should take two arguments:
+	n the eigenstate number and x the position.
 	"""
 	gridSize = len(eigenValues)
 
@@ -60,18 +62,26 @@ def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle):
 
 	n0 = 0
 
+	x = np.linspace(0, boxSize, num=gridSize)
 	eigenVector = eigenVectors[:, n0]
-	l, = ax2.plot(np.linspace(0, boxSize, num=gridSize), eigenVector ** 2)
-	ax3.set_ylim([0, 1.1 * np.max(eigenVectors) ** 2])
+	l, = ax2.plot(x, eigenVector ** 2)
+	ax2.set_ylim([0, 1.1 * np.max(eigenVectors) ** 2])
 	ax2.set_ylabel(r"$|\psi|^2$")
 	ax2.set_xlabel("x (a.u)")
 	ax2.set_title("Probability density")
 
-	l2, = ax3.plot(np.linspace(0, boxSize, num=gridSize), eigenVector)
+	l2, = ax3.plot(x, eigenVector)
 	ax3.set_ylim([1.1 * np.min(eigenVectors), 1.1 * np.max(eigenVectors)])
 	ax3.set_ylabel(r"$\psi$")
 	ax3.set_xlabel("x (a.u)")
 	ax3.set_title("Wave function")
+
+	if waveFunc != False:
+		waveFuncData = waveFunc(0, x)
+		lb, = ax2.plot(x, waveFuncData ** 2)
+		ax2.legend([l, lb], ["Distcrete", "Continuous"], loc="right", framealpha = 0.5)
+		l2b, = ax3.plot(x, waveFuncData)
+		ax3.legend([l2, l2b], ["Distcrete", "Continuous"], loc="right", framealpha = 0.5)
 
 	plt.tight_layout()
 
@@ -83,6 +93,10 @@ def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle):
 		y = eigenVectors[:, n]
 		l.set_ydata(y ** 2)
 		l2.set_ydata(y)
+		if waveFunc != False:
+			yb = waveFunc(n, np.linspace(0, boxSize, num=gridSize))
+			lb.set_ydata(yb**2)
+			l2b.set_ydata(yb)
 		ax2.set_title("Probability distribution for eigenvalue = {:4.3f}".format(eigenValues[n]))
 		fig.canvas.draw_idle()
 
