@@ -35,8 +35,8 @@ for i in range(0, 400):
 		vector = eigens[1][:, k]
 		for j in range(1, 190):
 			# Use some epsilons here due to precisions
-			if np.abs(vector[j]) > 10**-10 and np.abs(vector[-j]) > 10**-10:
-				scatterResults.append([i, k-1])
+			if np.abs(vector[j]) > 10 ** -18 and np.abs(vector[-j]) > 10 ** -18:
+				scatterResults.append([i, k - 1])
 				stop = True
 				break
 		if stop:

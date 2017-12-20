@@ -1,5 +1,5 @@
 """
-Author Frank Otto, Bouke Jansen, Ravi de Berg
+Authors Frank Otto, Bouke Jansen, Ravi de Berg
 General functions that are relevant for all tasks will be created in this file.
 """
 
@@ -9,16 +9,15 @@ from matplotlib.widgets import Slider, Button
 
 g_AxColor = "lightgoldenrodyellow"
 
-
 def getHamiltonMatrix(gridSize, t):
 	"""
 	:param gridSize: The size of the Hamiltonmatrix you wish to construct.
-	:param t: The unit energy in hbar/8ma
-	:return: A numpy array of size (gridSize,gridSize) representing the Hamiltonmatrix
+	:param t: The unit energy in hbar/8ma.
+	:return: A numpy array of size (gridSize,gridSize) representing the Hamiltonmatrix.
 	"""
-	return np.diag(-t * np.ones(gridSize - 1), k=-1) \
+	return np.diag(-t * np.ones(gridSize - 1), k = -1) \
 		   + np.diag(2 * t * np.ones(gridSize)) \
-		   + np.diag(-t * np.ones(gridSize - 1), k=1)
+		   + np.diag(-t * np.ones(gridSize - 1), k = 1)
 
 
 def calculateEigenstate(hamiltonMatrix, boxSize):
@@ -26,7 +25,6 @@ def calculateEigenstate(hamiltonMatrix, boxSize):
 	A function that calculates the eigenvalues and eigenvectors of a matrix.
 
 	:param hamiltonMatrix: A numpy array representing the hamilton matrix for which you wish to know the eigenvalues.
-	:param gridSize: Eigenlijk hoeft dit niet als parameter meegegeven want kan je berekenen uit hamiltonMatrix.
 	:param boxSize: Length of the box
 	:return: A size (2,) tuple with the first element eigenValues and second element normalized eigenVectors.
 	"""
@@ -45,17 +43,19 @@ def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle, waveFunc = F
 	A function plotting the eigenValues, an eigenStates and eigenState squared,
 	with some slider to scroll through the eigenStates and eigenState squared.
 
-	:param eigenValues: Sorted set of eigenvalues
-	:eigenVectors: eigenvectors in the order to their corresponding eigenvalues
-	:param boxSize: Length of the box
-	:waveFunc: optional argument, a function to plot through the eigenstates. It should take two arguments:
+	:param eigenValues: Sorted set of eigenvalues.
+	:param eigenVectors: Eigenvectors in the order to their corresponding eigenvalues.
+	:param boxSize: Length of the box.
+	:waveFunc: Optional argument, a function to plot through the eigenstates. It should take two arguments:
 	n the eigenstate number and x the position.
+
+	WARNING: Dragging sliders might cause figures to crash!!
 	"""
 	gridSize = len(eigenValues)
 
 	fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
 	fig.canvas.set_window_title(windowtitle)
-	ax1.plot(eigenValues, "o", markersize=3)
+	ax1.plot(eigenValues, "o", markersize = 3)
 	ax1.set_title("Energy")
 	ax1.set_ylabel("E (a.u.)")
 	ax1.set_xlabel("n")
@@ -79,14 +79,14 @@ def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle, waveFunc = F
 	if waveFunc != False:
 		waveFuncData = waveFunc(0, x)
 		lb, = ax2.plot(x, waveFuncData ** 2)
-		ax2.legend([l, lb], ["Distcrete", "Continuous"], loc="right", framealpha = 0.5)
+		ax2.legend([l, lb], ["Distcrete", "Continuous"], loc = "right", framealpha = 0.5)
 		l2b, = ax3.plot(x, waveFuncData)
-		ax3.legend([l2, l2b], ["Distcrete", "Continuous"], loc="right", framealpha = 0.5)
+		ax3.legend([l2, l2b], ["Distcrete", "Continuous"], loc = "right", framealpha = 0.5)
 
 	plt.tight_layout()
 
-	sliderAx = plt.axes([0.25, 0.1, 0.65, 0.03], facecolor=g_AxColor)
-	slider = Slider(sliderAx, "n", 0, gridSize - 1, valinit=n0, valfmt="%d")
+	sliderAx = plt.axes([0.25, 0.1, 0.65, 0.03], facecolor = g_AxColor)
+	slider = Slider(sliderAx, "n", 0, gridSize - 1, valinit = n0, valfmt="%d")
 
 	def update(val):
 		n = int(slider.val)
@@ -94,7 +94,7 @@ def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle, waveFunc = F
 		l.set_ydata(y ** 2)
 		l2.set_ydata(y)
 		if waveFunc != False:
-			yb = waveFunc(n, np.linspace(0, boxSize, num=gridSize))
+			yb = waveFunc(n, np.linspace(0, boxSize, num = gridSize))
 			lb.set_ydata(yb**2)
 			l2b.set_ydata(yb)
 		ax2.set_title("Probability distribution for eigenvalue = {:4.3f}".format(eigenValues[n]))
@@ -105,13 +105,13 @@ def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle, waveFunc = F
 	plt.subplots_adjust(bottom=0.25)
 
 	closeAx = plt.axes([0.85, 0.025, 0.1, 0.04])
-	closeButton = Button(closeAx, "Close", color=g_AxColor, hovercolor="0.975")
+	closeButton = Button(closeAx, "Close", color = g_AxColor, hovercolor="0.975")
 
 	def close(event):
 		plt.close()
 
 	resetAx = plt.axes([0.65, 0.025, 0.1, 0.04])
-	resetButton = Button(resetAx, "Reset", color=g_AxColor, hovercolor="0.975")
+	resetButton = Button(resetAx, "Reset", color = g_AxColor, hovercolor="0.975")
 
 	def reset(event):
 		slider.reset()
@@ -121,7 +121,7 @@ def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle, waveFunc = F
 	closeButton.on_clicked(close)
 
 	nextAx = plt.axes([0.55, 0.025, 0.1, 0.04])
-	nextButton = Button(nextAx, "Next", color=g_AxColor, hovercolor="0.975")
+	nextButton = Button(nextAx, "Next", color = g_AxColor, hovercolor="0.975")
 
 	def next(event):
 		slider.set_val((slider.val + 1) % gridSize)
@@ -129,7 +129,7 @@ def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle, waveFunc = F
 	nextButton.on_clicked(next)
 
 	prevAx = plt.axes([0.45, 0.025, 0.1, 0.04])
-	prevButton = Button(prevAx, "Previous", color=g_AxColor, hovercolor="0.975")
+	prevButton = Button(prevAx, "Previous", color = g_AxColor, hovercolor="0.975")
 
 	def previous(event):
 		slider.set_val((slider.val - 1) % gridSize)
