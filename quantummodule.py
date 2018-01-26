@@ -38,7 +38,7 @@ def calculateEigenstate(hamiltonMatrix, boxSize):
 	return eigenValues, eigenVectors
 
 
-def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle, waveFunc = False):
+def plotEigenstate(eigenValues, eigenVectors, boxSize, windowTitle, waveFunc = False):
 	"""
 	A function plotting the eigenValues, an eigenStates and eigenState squared,
 	with some slider to scroll through the eigenStates and eigenState squared.
@@ -54,10 +54,10 @@ def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle, waveFunc = F
 	gridSize = len(eigenValues)
 
 	fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
-	fig.canvas.set_window_title(windowtitle)
+	fig.canvas.set_window_title(windowTitle)
 	ax1.plot(eigenValues, "o", markersize = 3)
 	ax1.set_title("Energy")
-	ax1.set_ylabel("E (a.u.)")
+	ax1.set_ylabel("E")
 	ax1.set_xlabel("n")
 
 	n0 = 0
@@ -67,13 +67,13 @@ def plotEigenstate(eigenValues, eigenVectors, boxSize, windowtitle, waveFunc = F
 	l, = ax2.plot(x, eigenVector ** 2)
 	ax2.set_ylim([0, 1.1 * np.max(eigenVectors) ** 2])
 	ax2.set_ylabel(r"$|\psi|^2$")
-	ax2.set_xlabel("x (a.u)")
+	ax2.set_xlabel("x")
 	ax2.set_title("Probability density")
 
 	l2, = ax3.plot(x, eigenVector)
 	ax3.set_ylim([1.1 * np.min(eigenVectors), 1.1 * np.max(eigenVectors)])
 	ax3.set_ylabel(r"$\psi$")
-	ax3.set_xlabel("x (a.u)")
+	ax3.set_xlabel("x")
 	ax3.set_title("Wave function")
 
 	if waveFunc != False:
